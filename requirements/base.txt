@@ -1,10 +1,10 @@
 celery==4.0.2
-Django==1.11.2
+Django==1.11.29
 django-braces==1.11.0
 django-environ==0.4.3
 django-extensions==1.7.9
 django-model-utils==3.0.0
-Pillow==4.1.1
+Pillow==6.2.2
 psycopg2==2.7.1
 pytz==2017.2
 raven==6.1.0

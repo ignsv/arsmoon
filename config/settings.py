@@ -81,6 +81,7 @@ THIRD_PARTY_APPS = (
 LOCAL_APPS = (
     'arsmoon.common.apps.CommonConfig',
     'arsmoon.users.apps.UsersConfig',
+    'arsmoon.bitmex.apps.BitmexConfig',
 )
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS

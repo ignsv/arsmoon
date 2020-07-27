@@ -165,6 +165,13 @@ BROKER_URL = env('DJANGO_CELERY_BROKER_URL')
 CELERY_BACKEND = env('DJANGO_CELERY_BACKEND')
 CELERY_ALWAYS_EAGER = env.bool('DJANGO_CELERY_ALWAYS_EAGER')
 
+CELERY_ACCEPT_CONTENT = ['json', 'pickle']
+
+CELERY_IMPORTS = (
+    'arsmoon.bitmex.tasks',
+)
+
+
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
     

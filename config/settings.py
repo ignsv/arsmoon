@@ -74,21 +74,22 @@ DJANGO_APPS = (
 )
 
 THIRD_PARTY_APPS = (
+    'channels',
     'django_extensions',
     
 )
 
 LOCAL_APPS = (
-    'arsmoon.common.apps.CommonConfig',
     'arsmoon.users.apps.UsersConfig',
+    'arsmoon.bitmex.apps.BitmexConfig',
 )
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 AUTH_USER_MODEL = 'users.User'
-ADMIN_URL = r'^admin/'
+ADMIN_URL = 'admin/'
 
-MIDDLEWARE_CLASSES = [
+MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -159,10 +160,29 @@ ROOT_URLCONF = 'config.urls'
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
+# Channels
+ASGI_APPLICATION = 'config.routing.application'
+# TODO add backend
+# CHANNEL_LAYERS = {
+#     'default': {
+#         'BACKEND': 'channels_redis.core.RedisChannelLayer',
+#         'CONFIG': {
+#             "hosts": [('127.0.0.1', 6379)],
+#         },
+#     },
+# }
+
 # celery settings
 BROKER_URL = env('DJANGO_CELERY_BROKER_URL')
 CELERY_BACKEND = env('DJANGO_CELERY_BACKEND')
 CELERY_ALWAYS_EAGER = env.bool('DJANGO_CELERY_ALWAYS_EAGER')
+
+CELERY_ACCEPT_CONTENT = ['json', 'pickle']
+
+CELERY_IMPORTS = (
+    'arsmoon.bitmex.tasks',
+)
+
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
@@ -222,7 +242,7 @@ if os.environ.get('SENTRY_DSN'):
 
 USE_DEBUG_TOOLBAR = env.bool('DJANGO_USE_DEBUG_TOOLBAR')
 if USE_DEBUG_TOOLBAR:
-    MIDDLEWARE_CLASSES += [
+    MIDDLEWARE += [
         'debug_toolbar.middleware.DebugToolbarMiddleware',
     ]
     INSTALLED_APPS += (
@@ -245,16 +265,3 @@ if env.bool('DJANGO_TEST_RUN'):
     pass
 
 HEALTH_CHECK_BODY = env('DJANGO_HEALTH_CHECK_BODY')
-
-# Silk config
-USE_SILK = env('DJANGO_USE_SILK')
-if USE_SILK:
-    INSTALLED_APPS += (
-        'silk',
-    )
-    MIDDLEWARE_CLASSES += [
-        'silk.middleware.SilkyMiddleware',
-    ]
-    SILKY_AUTHENTICATION = True  # User must login
-    SILKY_AUTHORISATION = True  # User must have permissions
-    SILKY_PERMISSIONS = lambda user: user.is_superuser

@@ -76,7 +76,9 @@ DJANGO_APPS = (
 THIRD_PARTY_APPS = (
     'channels',
     'django_extensions',
-    
+    'rest_framework',
+    'rest_framework_swagger',
+
 )
 
 LOCAL_APPS = (
@@ -232,6 +234,20 @@ LOGGING = {
         },
     }
 }
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.AllowAny',
+    ),
+    'DATETIME_FORMAT': "%Y-%m-%d %H:%M",
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema'
+}
+
+
 
 if os.environ.get('SENTRY_DSN'):
     INSTALLED_APPS += ('raven.contrib.django.raven_compat',)

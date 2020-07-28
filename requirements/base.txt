@@ -1,5 +1,6 @@
 celery==4.1.1
-Django==1.11.29
+Django==3.0.8
+channels==2.4.0
 django-braces==1.11.0
 django-environ==0.4.3
 django-extensions==1.7.9
@@ -11,5 +12,4 @@ raven==6.1.0
 redis==3.2.0
 django-redis-cache==1.7.1
 django-solo==1.1.2
-django-silk==1.0.0
 websockets==8.1

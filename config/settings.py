@@ -74,12 +74,12 @@ DJANGO_APPS = (
 )
 
 THIRD_PARTY_APPS = (
+    'channels',
     'django_extensions',
     
 )
 
 LOCAL_APPS = (
-    'arsmoon.common.apps.CommonConfig',
     'arsmoon.users.apps.UsersConfig',
     'arsmoon.bitmex.apps.BitmexConfig',
 )
@@ -87,9 +87,9 @@ LOCAL_APPS = (
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 AUTH_USER_MODEL = 'users.User'
-ADMIN_URL = r'^admin/'
+ADMIN_URL = 'admin/'
 
-MIDDLEWARE_CLASSES = [
+MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -159,6 +159,9 @@ STATICFILES_FINDERS = (
 ROOT_URLCONF = 'config.urls'
 
 WSGI_APPLICATION = 'config.wsgi.application'
+
+# Channels
+ASGI_APPLICATION = 'config.routing.application'
 
 # celery settings
 BROKER_URL = env('DJANGO_CELERY_BROKER_URL')
@@ -253,16 +256,3 @@ if env.bool('DJANGO_TEST_RUN'):
     pass
 
 HEALTH_CHECK_BODY = env('DJANGO_HEALTH_CHECK_BODY')
-
-# Silk config
-USE_SILK = env('DJANGO_USE_SILK')
-if USE_SILK:
-    INSTALLED_APPS += (
-        'silk',
-    )
-    MIDDLEWARE_CLASSES += [
-        'silk.middleware.SilkyMiddleware',
-    ]
-    SILKY_AUTHENTICATION = True  # User must login
-    SILKY_AUTHORISATION = True  # User must have permissions
-    SILKY_PERMISSIONS = lambda user: user.is_superuser

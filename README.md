@@ -10,3 +10,7 @@
 
 * ``celery -A arsmoon.taskapp worker -l info -n worker``
 
+
+## websocket and swagger urls
+* rest documentation ``/docs/``
+* websocket ``ws://localhost:8000/ws/bitmex/``

@@ -76,7 +76,9 @@ DJANGO_APPS = (
 THIRD_PARTY_APPS = (
     'channels',
     'django_extensions',
-    
+    'rest_framework',
+    'rest_framework_swagger',
+
 )
 
 LOCAL_APPS = (
@@ -162,15 +164,15 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 # Channels
 ASGI_APPLICATION = 'config.routing.application'
-# TODO add backend
-# CHANNEL_LAYERS = {
-#     'default': {
-#         'BACKEND': 'channels_redis.core.RedisChannelLayer',
-#         'CONFIG': {
-#             "hosts": [('127.0.0.1', 6379)],
-#         },
-#     },
-# }
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}
 
 # celery settings
 BROKER_URL = env('DJANGO_CELERY_BROKER_URL')
@@ -232,6 +234,20 @@ LOGGING = {
         },
     }
 }
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.AllowAny',
+    ),
+    'DATETIME_FORMAT': "%Y-%m-%d %H:%M",
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema'
+}
+
+
 
 if os.environ.get('SENTRY_DSN'):
     INSTALLED_APPS += ('raven.contrib.django.raven_compat',)

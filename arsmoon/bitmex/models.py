@@ -22,3 +22,15 @@ class ClientAccountCounter(models.Model):
 
     def __str__(self):
         return self.account.name
+
+
+class Order(models.Model):
+    orderID = models.CharField(_('BitMex order id'), max_length=255, help_text=_('Maximum length is 255 symbols'),
+                               unique=True)
+    symbol = models.CharField(_('BitMex Symbol'), max_length=255, help_text=_('Maximum length is 255 symbols'))
+    volume = models.FloatField('Bitmex volume')
+    timestamp = models.DateTimeField('BitMex timestamp')
+    side = models.CharField(_('BitMex side'), max_length=255, help_text=_('Maximum length is 255 symbols'))
+    price = models.FloatField('Bitmex price')
+    account = models.ForeignKey(Account, verbose_name=_('ClientAccountCounter'), on_delete=models.CASCADE,
+                                related_name='orders')

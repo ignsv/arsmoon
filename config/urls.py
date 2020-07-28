@@ -12,7 +12,6 @@ urlpatterns = [
     path(settings.ADMIN_URL, admin.site.urls),
     # Your stuff: custom urls includes go here
     path('users/', include('arsmoon.users.urls')),
-    path('bitmex/', include('arsmoon.bitmex.urls')),
 ]
 
 

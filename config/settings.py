@@ -162,6 +162,14 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 # Channels
 ASGI_APPLICATION = 'config.routing.application'
+# CHANNEL_LAYERS = {
+#     'default': {
+#         'BACKEND': 'channels_redis.core.RedisChannelLayer',
+#         'CONFIG': {
+#             "hosts": [('127.0.0.1', 6379)],
+#         },
+#     },
+# }
 
 # celery settings
 BROKER_URL = env('DJANGO_CELERY_BROKER_URL')
@@ -233,7 +241,7 @@ if os.environ.get('SENTRY_DSN'):
 
 USE_DEBUG_TOOLBAR = env.bool('DJANGO_USE_DEBUG_TOOLBAR')
 if USE_DEBUG_TOOLBAR:
-    MIDDLEWARE_CLASSES += [
+    MIDDLEWARE += [
         'debug_toolbar.middleware.DebugToolbarMiddleware',
     ]
     INSTALLED_APPS += (

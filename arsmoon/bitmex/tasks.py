@@ -9,7 +9,7 @@ def bitmex_instrument_data(account_name):
     loop = asyncio.get_event_loop()
     try:
         handler = BitmexHandler()
-        loop.run_until_complete(handler.receive_messages(account_name))
+        loop.run_until_complete(handler.handle_bitmex_data(account_name))
         loop.run_forever()
     finally:
         loop.stop()

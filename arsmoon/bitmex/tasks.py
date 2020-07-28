@@ -13,5 +13,5 @@ def bitmex_instrument_data(account_name):
         loop.run_forever()
     finally:
         loop.stop()
-        loop.close()
-        print('Close loop')  # close loop. Logger can be used
+        # loop.close()
+        print('Close loop')  # stop loop. Logger can be used

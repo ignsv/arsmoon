@@ -162,6 +162,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 # Channels
 ASGI_APPLICATION = 'config.routing.application'
+# TODO add backend
 # CHANNEL_LAYERS = {
 #     'default': {
 #         'BACKEND': 'channels_redis.core.RedisChannelLayer',

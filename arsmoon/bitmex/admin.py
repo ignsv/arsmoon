@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from arsmoon.bitmex.models import Order, Account
+from arsmoon.bitmex.models import Order, Account, ClientAccountCounter
 
 
 @admin.register(Order)
@@ -11,3 +11,8 @@ class OrderAdmin(admin.ModelAdmin):
 @admin.register(Account)
 class AccountAdmin(admin.ModelAdmin):
     list_display = ('name', )
+
+
+@admin.register(ClientAccountCounter)
+class ClientAccountCounterAdmin(admin.ModelAdmin):
+    list_display = ('task_id', 'count')

@@ -19,7 +19,6 @@ class BitmexHandler:
                             bitmex_data['symbol'] = data['symbol']
                             bitmex_data['timestamp'] = data['timestamp']
                             bitmex_data['account'] = account_name
-                            # print(bitmex_data)
                             async with websockets.connect(self.ws_server_url) as server_ws:
                                 serialized_data = json.dumps(bitmex_data)
                                 await server_ws.send(serialized_data)

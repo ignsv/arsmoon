@@ -21,6 +21,7 @@ docs = include_docs_urls(
 
 urlpatterns = [
     path('', TemplateView.as_view(template_name='base.html'), name="home"),
+    path('bitmex/', include('arsmoon.bitmex.urls')),
     path(settings.ADMIN_URL, admin.site.urls),
     # Your stuff: custom urls includes go here
     path('users/', include('arsmoon.users.urls')),

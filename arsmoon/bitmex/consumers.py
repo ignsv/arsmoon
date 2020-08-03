@@ -3,6 +3,7 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 from arsmoon.bitmex.models import Account, ClientAccountCounter
 from arsmoon.bitmex.tasks import bitmex_instrument_data
 from arsmoon.taskapp.celery import app
+from channels.db import database_sync_to_async
 
 
 class BitmexConsumer(AsyncWebsocketConsumer):
@@ -13,44 +14,60 @@ class BitmexConsumer(AsyncWebsocketConsumer):
     async def disconnect(self, close_code):
         pass
 
+    @database_sync_to_async
+    def get_account(self, name):
+        return Account.objects.filter(name=name).first()
+
+    @database_sync_to_async
+    def get_client_counter(self, name):
+        return ClientAccountCounter.objects.filter(account__name=name).first()
+
+    @database_sync_to_async
+    def create_client_counter(self, account, task_id):
+        return ClientAccountCounter.objects.create(account=account, count=1, task_id=task_id)
+
+    @database_sync_to_async
+    def update_client_counter_number(self, client_account, number):
+        client_account.count = client_account.count + number
+        return client_account.save()
+
+    @database_sync_to_async
+    def delete_client_counter_number(self, client_account):
+        return client_account.delete()
+
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
         if 'action' in text_data_json and 'account' in text_data_json:
+            account = await self.get_account(name=text_data_json['account'])
             if text_data_json['action'] == 'subscribe':
-                account = Account.objects.filter(name=text_data_json['account']).first()
                 if account:
                     await self.channel_layer.group_add(
                         text_data_json['account'],
                         self.channel_name
                     )
-                    connector_counter = ClientAccountCounter.objects.filter(
-                        account__name=text_data_json['account']).first()
+                    connector_counter = await self.get_client_counter(text_data_json['account'])
                     if not connector_counter:
                         task_id = bitmex_instrument_data.apply_async(
                             (account.name,)).task_id  # start task to receive data from bitmax
-                        ClientAccountCounter.objects.create(account=account, count=1, task_id=task_id)
+                        await self.create_client_counter(account, task_id=task_id)
                     else:
-                        connector_counter.count = connector_counter.count + 1
-                        connector_counter.save()
+                        await self.update_client_counter_number(connector_counter, 1)
             elif text_data_json['action'] == 'unsubscribe':
-                account = Account.objects.filter(name=text_data_json['account']).first()
                 if account:
                     await self.channel_layer.group_discard(
                         text_data_json['account'],
                         self.channel_name
                     )
-                    connector_counter = ClientAccountCounter.objects.filter(
-                        account__name=text_data_json['account']).first()
+                    connector_counter = await self.get_client_counter(text_data_json['account'])
                     if connector_counter:
                         if connector_counter.count == 1:
                             app.control.revoke(connector_counter.task_id, terminate=True) #terminate sending data from bitmex
-                            connector_counter.delete()
+                            await self.delete_client_counter_number(connector_counter)
                         else:
-                            connector_counter.count = connector_counter.count - 1
-                            connector_counter.save()
+                            await self.update_client_counter_number(connector_counter, -1)
             else:
                 pass
-        elif 'account' in text_data_json:
+        else:
             result_data_dict = {}
             result_data_dict['message'] = text_data_json
             result_data_dict['type'] = 'bitmex_message'
@@ -58,12 +75,9 @@ class BitmexConsumer(AsyncWebsocketConsumer):
                 text_data_json['account'],
                 result_data_dict
             )
-        else:
-            pass
 
     # Receive message from room group
     async def bitmex_message(self, event):
         message = event['message']
-
         # Send message to WebSocket
         await self.send(text_data=json.dumps(message))

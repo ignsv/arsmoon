@@ -1,4 +1,7 @@
 ## Local deployment using vagrant
+* ``sudo add-apt-repository ppa:chris-lea/redis-server``
+* ``sudo apt-get update``
+* ``sudo apt -y install redis-server``
 * ``vagrant up``
 * ``vagrant ssh``
 * ``cd /vagrant``

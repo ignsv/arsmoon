@@ -1,9 +1,9 @@
 ## Local deployment using vagrant
+* ``vagrant up``
+* ``vagrant ssh``
 * ``sudo add-apt-repository ppa:chris-lea/redis-server``
 * ``sudo apt-get update``
 * ``sudo apt -y install redis-server``
-* ``vagrant up``
-* ``vagrant ssh``
 * ``cd /vagrant``
 * ``cp env.example ./config/.env``
 *  ``./manage.py migrate``

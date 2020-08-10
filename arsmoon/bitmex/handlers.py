@@ -4,10 +4,8 @@ import json
 
 class BitmexHandler:
     ws_bitmex_url = 'wss://testnet.bitmex.com/realtime?subscribe=instrument'
-    ws_server_url = 'ws://localhost:8000/ws/bitmex/'
 
-    async def handle_bitmex_data(self, account_name):
-
+    async def handle_bitmex_data(self, account_name, channel_layer):
         async with websockets.connect(self.ws_bitmex_url) as websocket:
             async for message in websocket:
                 message_json = json.loads(message)
@@ -19,6 +17,10 @@ class BitmexHandler:
                             bitmex_data['symbol'] = data['symbol']
                             bitmex_data['timestamp'] = data['timestamp']
                             bitmex_data['account'] = account_name
-                            async with websockets.connect(self.ws_server_url) as server_ws:
-                                serialized_data = json.dumps(bitmex_data)
-                                await server_ws.send(serialized_data)
+                            await channel_layer.group_send(
+                                account_name,
+                                {
+                                    'type': 'bitmex_message',
+                                    'message' : bitmex_data,
+                                }
+                            )

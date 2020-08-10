@@ -18,7 +18,6 @@ class Account(models.Model):
 class ClientAccountCounter(models.Model):
     count = models.IntegerField(_('Number of connections'), default=0)
     account = models.ForeignKey(Account, verbose_name=_('ClientAccountCounter'), on_delete=models.CASCADE)
-    task_id = models.CharField(_('Task_id'), max_length=255, help_text=_('Maximum length is 255 symbols'))
 
     def __str__(self):
         return self.account.name

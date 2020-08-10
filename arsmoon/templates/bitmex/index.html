@@ -38,7 +38,7 @@
             const message = messageInputDom.value;
             chatSocket.send(JSON.stringify({
                 'action': 'subscribe',
-                'account': 'bitmex'
+                'account': message
             }));
             messageInputDom.value = '';
         };
@@ -48,7 +48,7 @@
             const message = messageInputDom.value;
             chatSocket.send(JSON.stringify({
                 'action': 'unsubscribe',
-                'account': 'bitmex'
+                'account': message
             }));
             messageInputDom.value = '';
         };

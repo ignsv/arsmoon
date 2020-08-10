@@ -15,4 +15,4 @@ class AccountAdmin(admin.ModelAdmin):
 
 @admin.register(ClientAccountCounter)
 class ClientAccountCounterAdmin(admin.ModelAdmin):
-    list_display = ('task_id', 'count')
+    list_display = ('count',)

@@ -13,7 +13,7 @@ raven==6.1.0
 redis==3.2.0
 django-redis-cache==1.7.1
 django-solo==1.1.2
-websockets==8.1
+websockets==9.1
 djangorestframework==3.11.0
 django-rest-swagger==2.2.0
 bitmex==0.2.2
